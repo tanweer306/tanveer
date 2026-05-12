@@ -1,0 +1,146 @@
+{
+  "// PORTFOLIO DATA TEMPLATE": "Copy this structure to create your own portfolio",
+  "// Instructions": "Replace all example values with your own information",
+  "// Optional fields": "Remove any fields you don't need (marked as optional below)",
+  
+  "hero": {
+    "name": "Your Full Name",
+    "title": "Your Professional Title or Tagline",
+    "bio": "A compelling 2-3 sentence bio about yourself. Talk about your passion, experience, and what makes you unique.",
+    "profileImage": "https://your-image-url.com/photo.jpg",
+    "resumeUrl": "https://your-resume-url.com/resume.pdf (OPTIONAL - remove if not needed)",
+    "social": {
+      "github": "https://github.com/yourusername (OPTIONAL)",
+      "linkedin": "https://linkedin.com/in/yourusername (OPTIONAL)",
+      "twitter": "https://twitter.com/yourusername (OPTIONAL)",
+      "email": "tanweer306@gmail.com (OPTIONAL)"
+    }
+  },
+  
+  "skills": {
+    "languages": [
+      "Add your programming languages",
+      "JavaScript",
+      "Python",
+      "Java"
+    ],
+    "frameworks": [
+      "Add frameworks and libraries",
+      "React",
+      "Node.js",
+      "Next.js"
+    ],
+    "tools": [
+      "Add tools and technologies",
+      "Git",
+      "Docker",
+      "AWS"
+    ],
+    "design": [
+      "Add design tools (OPTIONAL - can remove this category)",
+      "Figma",
+      "Tailwind CSS"
+    ]
+  },
+  
+  "experience": [
+    {
+      "company": "Company Name",
+      "role": "Your Job Title",
+      "duration": "Jan 2022 - Present",
+      "location": "City, State/Country",
+      "responsibilities": [
+        "List your key responsibilities",
+        "Start each with an action verb",
+        "Be specific and quantify when possible"
+      ],
+      "achievements": [
+        "Major achievements in this role",
+        "Include metrics: 'Increased performance by 40%'",
+        "Remove this array if no specific achievements"
+      ],
+      "technologies": ["Tech 1", "Tech 2", "Tech 3"]
+    },
+    {
+      "// NOTE": "Add more experience entries by copying the structure above",
+      "company": "Previous Company",
+      "role": "Previous Role",
+      "duration": "Jun 2020 - Dec 2021",
+      "location": "City, State",
+      "responsibilities": ["Responsibility 1", "Responsibility 2"],
+      "achievements": ["Achievement 1"],
+      "technologies": ["Tech 1", "Tech 2"]
+    }
+  ],
+  
+  "education": [
+    {
+      "degree": "Your Degree Name",
+      "institution": "University/School Name",
+      "duration": "Start Year - End Year",
+      "gpa": "3.8/4.0 (OPTIONAL - remove if you don't want to show)",
+      "relevantCourses": [
+        "Course 1 (OPTIONAL)",
+        "Course 2",
+        "Course 3"
+      ],
+      "achievements": [
+        "Dean's List (OPTIONAL)",
+        "Club President"
+      ]
+    },
+    {
+      "// NOTE": "For certifications, use this structure:",
+      "degree": "Professional Certifications",
+      "institution": "Various Platforms",
+      "duration": "2020 - Present",
+      "courses": [
+        "AWS Certified Developer",
+        "Google Cloud Professional",
+        "Advanced React Course"
+      ]
+    }
+  ],
+  
+  "projects": [
+    {
+      "name": "Project Name",
+      "description": "Brief description of the project. Explain what problem it solves and what makes it interesting.",
+      "image": "https://project-image-url.com/screenshot.jpg",
+      "technologies": ["React", "Node.js", "MongoDB"],
+      "liveUrl": "https://your-project.com (OPTIONAL - remove if not deployed)",
+      "githubUrl": "https://github.com/you/project (OPTIONAL - remove if private)",
+      "featured": true
+    },
+    {
+      "// NOTE": "Set featured: true for your best 3-4 projects",
+      "name": "Another Project",
+      "description": "Project description here...",
+      "image": "https://image-url.com/image.jpg",
+      "technologies": ["Tech 1", "Tech 2"],
+      "githubUrl": "https://github.com/you/project2",
+      "featured": false
+    },
+    {
+      "// NOTE": "Add 4-8 projects total for best display",
+      "name": "Third Project",
+      "description": "Description...",
+      "image": "https://image-url.com/image3.jpg",
+      "technologies": ["Tech 1", "Tech 2"],
+      "liveUrl": "https://project3.com",
+      "featured": false
+    }
+  ],
+  
+  "contact": {
+    "email": "your.email@example.com",
+    "phone": "+1 (555) 123-4567 (OPTIONAL)",
+    "location": "City, State/Country",
+    "availability": "Available for freelance projects and full-time opportunities",
+    "social": {
+      "github": "https://github.com/yourusername (OPTIONAL)",
+      "linkedin": "https://linkedin.com/in/yourusername (OPTIONAL)",
+      "twitter": "https://twitter.com/yourusername (OPTIONAL)"
+    }
+  }
+}

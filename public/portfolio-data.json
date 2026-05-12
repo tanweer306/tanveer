@@ -1,0 +1,280 @@
+{
+  "hero": {
+    "name": "Tanveer Ahmad",
+    "title": "Experienced developer specializing in AI automation and RAG applications",
+    "bio": "I help businesses automate their workflows and build AI knowledge bases using RAG technology, n8n, and modern cloud infrastructure. My tools let your team ask questions and get instant answers from your own documents, manuals, and data. I leverage AI-assisted development to deliver solutions faster and more affordably than traditional development without compromising on quality.",
+    "aboutMe": "I am a software developer based in Lahore, Pakistan with over 20 years of experience delivering real working software to clients in Pakistan, USA, and Australia. My career spans desktop applications for Pakistan's textile industry, large-scale automation systems for US clients, affiliate marketing platforms, social media automation, and now AI-powered web applications. I have built payroll systems running for 1,000+ employees, automation bots operating for 15 consecutive years, and AI education platforms with RAG, vector search, and live video. I started in 2005 building database applications for Faisalabad's textile industry. Over the years I worked with clients in the USA and Australia, delivered projects across completely different industries and technologies, and adapted to every major shift in the software industry from desktop to web, from manual to automated, from traditional development to AI-assisted building. Today I specialize in AI integration, RAG applications, n8n automation workflows, and full stack Next.js development. I use AI-assisted development to deliver faster and more affordably the same way every modern developer works in 2026. I do not just write code. I solve problems that matter to real businesses.",
+    "recommendationImage": "https://github.com/tanweer306/portfolio-assets/blob/main/James.png?raw=true",
+    "profileImage": "https://github.com/tanweer306/portfolio-assets/blob/main/Tanveer%20Ahmad.png?raw=true",
+    "resumeUrl": "https://example.com/resume.pdf",
+    "social": {
+      "github": "https://github.com/tanweer306",
+      "linkedin": "https://www.linkedin.com/in/remoteassistant24/",
+      "twitter": "https://twitter.com/alexjohnson",
+      "email": "tanweer306@gmail.com"
+    }
+  },
+  "skills": {
+    "languages": [
+      "JavaScript/TypeScript",
+      "Python",
+      "SQL"
+    ],
+    "AI & Automation": [
+      "n8n Workflow Automation",
+      "RAG (Retrieval Augmented Generation)",
+      "OpenAI / Claude API",
+      "Vector Search (Qdrant)",
+      "LangChain"
+    ],
+    "Frameworks & Tools": [
+      "Next.js",
+      "React",
+      "Node.js",
+      "FastAPI",
+      "Docker"
+    ],
+    "Cloud & Databases": [
+      "AWS (EC2, S3)",
+      "MongoDB",
+      "PostgreSQL",
+      "Supabase",
+      "Vercel / Render"
+    ]
+  },
+  "experience": [
+    {
+      "company": "Self Employed",
+      "role": "Senior Full Stack Developer",
+      "duration": "Jan 2025 - Present",
+      "location": "Faisalabad, PK",
+      "responsibilities": [
+        "Built full stack AI-powered web applications using Next.js, Python and cloud infrastructure",
+        "Developed RAG applications enabling businesses to query their own documents using AI",
+        "Created n8n automation workflows integrating multiple business tools and APIs",
+        "Deployed and managed applications on AWS EC2 with Docker, Nginx and SSL"
+      ],
+      "achievements": [
+        "Built learnbyai.app, a complete AI education platform with RAG, multilingual support, audio output and live video classes",
+        "Deployed full self-hosted Supabase, Qdrant and MongoDB stack on AWS",
+        "Developed PDF chat application showcasing RAG technology for client acquisition"
+      ],
+      "technologies": ["Next.js", "Python", "n8n", "AWS", "RAG", "OpenAI", "Qdrant", "MongoDB"]
+    },
+    {
+      "company": "Social Media & YouTube Manager OPMC, Australia — 3 years",
+      "role": "Social Media & YouTube Manager",
+      "duration": "Jan 2022 - Dec 2025",
+      "location": "Remote",
+        "responsibilities": [
+          "Managed complete social media presence across all platforms for an Australian WooCommerce plugin company",
+          "Created, edited and published YouTube videos showcasing product features and tutorials",
+          "Grew social media audience and drove traffic to plugin product pages",
+          "Coordinated with remote development team in Australia to align marketing with product launches",
+          "Monitored analytics and optimized content strategy based on performance data"
+          ],
+  "achievements": [
+    "Successfully managed digital marketing for multiple WooCommerce plugins in the Australian market",
+    "Built and maintained consistent brand presence across social media channels for 3 years",
+    "Demonstrated ability to work independently with international remote teams across time zones"
+  ],
+      "technologies": ["Desktop Development", "Web Development", ".NET", "SQL Server", "Client Communication"]
+    },
+    {
+      "company": "NetworkAfterWork, USA",
+      "role": "LinkedIn Automation Specialist Independent Consultant",
+      "duration": "Jun 2012 - Dec 2022",
+      "location": "Remote",
+      "responsibilities": [
+        "Developed and maintained proprietary automation bots for LinkedIn outreach campaigns",
+        "Managed a team of operators running targeted messaging campaigns for a long term US client",
+        "Handled account management, scaling and technical maintenance of automation systems"
+      ],
+      "achievements": [
+        "Sustained a single client relationship for 10+ years through consistent delivery",
+        "Built and managed systems handling thousands of accounts simultaneously",
+        "Generated consistent above-market income while managing the entire operation independently"
+      ],
+      "technologies": ["Automation", "Bot Development", "Team Management", "Lead Generation"]
+    },
+    {
+      "company": "Property Scoring Tools Developer Hemant Jindal, USA — 2 years",
+      "role": "Software Developer",
+      "duration": "Jan 2010 - Dec 2012",
+      "location": "Remote",
+      "responsibilities": [
+        "Developed custom property scoring and analysis tools for a US-based real estate investor",
+        "Built algorithms to evaluate and rank properties based on investment criteria and market data",
+        "Created the complete IEI Impact website with professional design and full functionality",
+        "Integrated an advanced AI chatbot with n8n automation backend supporting text, file upload and audio messages",
+        "Maintained long-term client relationship spanning multiple projects across different technologies"
+    ],
+      "achievements": [
+        "Delivered custom property investment tools used for real estate decision making in the US market",
+        "Built and launched ieimpact.vercel.app with a fully functional multimodal AI chatbot",
+        "Maintained a trusted client relationship across multiple projects spanning several years",
+        "Successfully transitioned from traditional development tools to modern AI-powered solutions for the same client"
+  ],
+      "technologies": [".NET", "SQL Server", "Desktop Development", "Client Communication"]
+    },
+  {   "company": "Affiliate Marketing Business Partner Ronald Curtis, USA — 3 years",
+      "role": "Affiliate Marketing Automation Developer",
+      "duration": "May 2008 - Dec 2011",
+      "location": "Remote",
+      "responsibilities": [
+        "Built and operated custom automation bots for MySpace social platform at scale",
+        "Generated targeted leads for affiliate marketing campaigns in the US market",
+        "Managed large volumes of social media accounts simultaneously for outreach campaigns",
+        "Analyzed campaign performance and optimized targeting strategies for better conversion",
+        "Operated as an independent business partner managing the technical side of the partnership"
+      ],
+  "achievements": [
+        "Built one of the earliest social media automation systems during MySpace peak popularity in the USA",
+        "Sustained a 4-year international business partnership delivering consistent lead generation results",
+        "Generated profitable affiliate marketing revenue through automated lead generation at scale",
+        "Demonstrated entrepreneurial ability to identify and execute on early social media marketing opportunities"
+  ],
+      "technologies": [".NET", "SQL Server", "Desktop Development", "Web Development", "Client Communication"]
+    },
+    { "company": "COMSDEV Software Company, Faisalabad",
+      "role": "Software Engineer",
+      "duration": "Jun 2007 - Dec 2008",
+      "location": "Faisalabad, PK",
+      "responsibilities": [
+        "Developed custom software solutions for US-based clients in various industries",
+        "Built desktop applications with .NET and SQL Server for clients in the US market",
+        "Communicated directly with clients to gather requirements and deliver solutions"
+      ],
+      "achievements": [
+        "Successfully delivered multiple commercial software projects for US clients",
+        "Gained experience working with international clients and understanding their needs",
+        "Built a reputation as a reliable developer capable of delivering quality solutions on time"
+      ],
+      "technologies": [".NET", "SQL Server", "Desktop Development", "Client Communication"]
+    },
+    {
+      "company": "Rana Textile Mills, Faisalabad",
+      "role": "Desktop Software Developer",
+      "duration": "Jan 2003 - May 2007",
+      "location": "Faisalabad, PK",
+      "responsibilities": [
+        "Developed database-driven desktop applications for textile industry in Faisalabad",
+        "Built inventory, sales and management and Attendance & Payroll systems for local businesses",
+        "Communicated with local business owners to understand their needs and deliver solutions"
+      ],
+      "achievements": [
+        "Successfully delivered multiple commercial applications used in the local textile industry",
+        "Built reputation as a reliable software developer in the Faisalabad market"
+      ],
+      "technologies": ["Desktop Development", "Database Design", "VB6", "SQL"]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Science in Computer Science",
+      "institution": "Allama Iqbal Open University (AIOU), Pakistan",
+      "duration": "1999 - 2003",
+      "relevantCourses": [
+        "Data Structures & Algorithms",
+        "Web Development",
+        "Database Systems",
+        "Software Engineering"
+      ],
+      "achievements": [
+        "Completed degree while pursuing practical software development",
+        "Started first commercial software projects during final years of study"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "LearnByAI.app — AI-Powered Education Platform - 2026",
+      "description": "An AI-powered education platform where students upload books and interact with AI tutors using RAG technology. Features multilingual responses with audio playback, AI-generated quizzes and study plans, teacher dashboard with live video classes, and full institution management for schools and coaching centers. Built with Next.js, Python, AWS, Qdrant vector search, MongoDB, Supabase, and OpenAI.",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/learnbyai2.png?raw=true",
+      "technologies": ["Next.js", "RAG", "Qdrant", "AWS", "OpenAI", "MongoDB", "Supabase"],
+      "liveUrl": "learnbyai.app",
+      "githubUrl": "https://github.com/tanweer306/LearnByAI",
+      "featured": true
+    },
+    {
+      "name": "Docly — PDF Chat Application with RAG- 2025",
+      "description": "A document intelligence tool that lets users upload any PDF and have an AI-powered conversation with it. Supports multilingual answers, audio responses, file uploads, and voice messages. Built with Python FastAPI backend, Qdrant vector database, and Next.js frontend deployed on AWS and Vercel.",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/Your%20documents,%20answering%20back.png?raw=true",
+      "technologies": ["Python", "FastAPI", "RAG", "OpenAI", "Qdrant", "Next.js", "Vercel"],
+      "liveUrl": "https://docly-rag-bot.vercel.app/",
+      "githubUrl": "https://github.com/tanweer306/RAG_BOT",
+      "featured": true
+    },
+    {
+      "name": " ieImpact AI Chatbot - Hemant Jindal, USA - 2025",
+      "description": "A professional website with an integrated multimodal AI chatbot powered by n8n automation backend. Supports real-time text conversations, file uploads, and audio messages. Built for Mr. Hemant Jindal, USA property investment consultant. Demonstrates advanced n8n agent workflow integration with a production Next.js frontend.",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/ieImpact.png?raw=true",
+      "technologies": ["Next.js", "n8n", "AI Automation", "Audio Messaging", "File Upload", "Vercel"],
+      "liveUrl": "https://ieimpact.vercel.app/",
+      "githubUrl": "https://github.com/tanweer306/ieImpact_New09SEP",
+      "featured": true
+    },
+    {
+      "name": "Point of Sale System - Local Retail Business, Faisalabad - 2018",
+      "description": "A complete retail management system built for a local business and still running successfully after years in production. Features include billing, inventory management, stock control, customer database, credit management, and professional reports. Built with .NET and SQL Server with Crystal Reports for business reporting. -  Live in production",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/POS_png.png?raw=true",
+      "technologies": [".NET", "SQL Server", "Crystal Reports", "Desktop Development"],
+       "githubUrl": "",
+      "featured": false
+    },
+    {
+      "name": "LinkedIn Automation Platform, NetworkAfterWork, USA 2007-2017",
+      "description": "Duration: 10 years- A large-scale LinkedIn outreach automation system built and maintained for NetworkAfterWork, USA — one of the largest professional networking event companies in America. Managed automated connection requests, targeted messaging campaigns, and thousands of accounts simultaneously. Operated and maintained this system for over 15 years with a team of operators. Demonstrated deep expertise in automation, bot development, and large-scale campaign management.",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/Linkedin.png?raw=true",
+      "technologies": ["Automation", "Bot Development", "LinkedIn", "Lead Generation", "Team Management"],
+      "featured": false
+    },
+    {
+      "name": "MySpace Affiliate Marketing Automation, Ronald Curtis USA - 2006",
+      "description": "Duration: 4 years - A joint venture automation project with Mr. Ronald Curtis, USA during MySpace's peak popularity. Built custom bots for automated lead generation and affiliate marketing campaigns. Generated consistent leads at scale using MySpace's social platform, demonstrating early expertise in social media automation and US market affiliate marketing at a time when these techniques were cutting edge.",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/myspace_affiliate_title.png?raw=true",
+      "technologies": ["Automation", "Affiliate Marketing", "Lead Generation", "Bot Development"],
+      "featured": false
+    },
+    {
+      "name": "Scrapbook Graphics Application - COMSDEV Software, Faisalabad - 2006",
+      "description": "A desktop graphics application built for a US client while working as a Software Engineer at COMSDEV Software Company, Faisalabad. Allowed users to create, customize, and manage digital scrapbook designs with graphics editing capabilities. Delivered as a commercial product for the US market.",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/scrapbook.png?raw=true",
+      "technologies": [ ".NET", "Desktop Development", "Graphics", "US Client"],
+      "featured": false
+    },
+    {
+      "name": "Cloth Production & Grading System - Rana Textile Mills, Faisalabad - 2004",
+      "description": "A production management system for one of Faisalabad's major textile mills covering cloth production tracking and quality grading workflows. Successfully implemented and adopted across the mill's operations. Achievement: Received a full salary cash reward from the mill owner upon successful implementation, a rare recognition of exceptional delivery.",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/Production.png?raw=true",
+      "technologies": [".NET", "SQL Server", "Production Management", "Textile Industry"],
+      "featured": false
+    },
+    {
+      "name": "2nd Choice Production Reports System - Rana Denim, Faisalabad - 2005",
+      "description": "A specialized reporting system for tracking and managing second-choice fabric production at Rana Denim. Provided management with accurate production analytics and reports to minimize waste and optimize quality control. Achievement: Received a full salary cash reward from the owner upon successful implementation. Achievement: Full salary cash reward from mill owner. ",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/Denim.png?raw=true",
+      "technologies": [ ".NET", "SQL Server", "Reporting", "Crystal Reports", "Textile Industry"],
+      "featured": false
+    },
+    {
+      "name": "Card Swipe Attendance & Payroll System - Rana Textile Mills, Faisalabad - 2004",
+      "description": "A complete HR automation system managing attendance and payroll for over 1,000 employees using card swipe technology. Ran successfully for more than 5 years in continuous production. Handled shift management, overtime calculations, deductions, and full payroll processing for a large industrial workforce.",
+      "image": "https://github.com/tanweer306/portfolio-assets/blob/main/payroll.png?raw=true",
+      "technologies": [".NET", "SQL Server", "RFID", "Payroll", "HR Management"],
+       "githubUrl": "",
+      "featured": false
+    }
+  ],
+  "contact": {
+    "email": "tanweer306@gmail.com",
+    "phone": "+923007603007",
+    "location": "Faisalabad, Pakistan",
+    "availability": "Available for freelance projects and full-time opportunities",
+    "social": {
+      "github": "https://github.com/tanweer306",
+      "linkedin": "https://www.linkedin.com/in/remoteassistant24/",
+      "twitter": "https://twitter.com/alexjohnson"
+    }
+  }
+}
