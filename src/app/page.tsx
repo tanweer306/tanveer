@@ -1124,6 +1124,21 @@ export default function Page() {
                   </a>
                 )}
               </div>
+              <div
+                className="mt-8 pt-8 border-t border-slate-700 dark:border-gray-300 text-center"
+                data-oid="whatsapp-cta"
+              >
+                <a
+                  href="https://wa.me/923011234567?text=Hi%20Tanveer%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold transition-all transform hover:scale-105"
+                  data-oid="whatsapp-btn"
+                >
+                  <span>💬</span>
+                  <span>Message me on WhatsApp</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
