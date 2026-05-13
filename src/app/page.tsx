@@ -48,6 +48,7 @@ interface PortfolioData {
     tools: string[];
     design: string[];
   };
+  experienceTagline?: string;
   experience: Array<{
     company: string;
     role: string;
@@ -588,6 +589,11 @@ export default function Page() {
               Experience
             </span>
           </h2>
+          {data.experienceTagline && (
+            <p className="text-center text-gray-400 dark:text-gray-600 mb-12 max-w-3xl mx-auto text-lg" data-oid="exp-tagline">
+              {data.experienceTagline}
+            </p>
+          )}
           <div className="max-w-4xl mx-auto space-y-8" data-oid="x6ovqzd">
             {data.experience.map((exp, idx) => (
               <div

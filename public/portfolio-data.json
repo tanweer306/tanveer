@@ -1,9 +1,9 @@
 {
   "hero": {
     "name": "Tanveer Ahmad",
-    "title": "Experienced developer specializing in AI automation and RAG applications",
-    "bio": "I help businesses automate their workflows and build AI knowledge bases using RAG technology, n8n, and modern cloud infrastructure. My tools let your team ask questions and get instant answers from your own documents, manuals, and data. I leverage AI-assisted development to deliver solutions faster and more affordably than traditional development without compromising on quality.",
-    "aboutMe": "I am a software developer based in Lahore, Pakistan with over 20 years of experience delivering real working software to clients in Pakistan, USA, and Australia. My career spans desktop applications for Pakistan's textile industry, large-scale automation systems for US clients, affiliate marketing platforms, social media automation, and now AI-powered web applications. I have built payroll systems running for 1,000+ employees, automation bots operating for 15 consecutive years, and AI education platforms with RAG, vector search, and live video. I started in 2005 building database applications for Faisalabad's textile industry. Over the years I worked with clients in the USA and Australia, delivered projects across completely different industries and technologies, and adapted to every major shift in the software industry from desktop to web, from manual to automated, from traditional development to AI-assisted building. Today I specialize in AI integration, RAG applications, n8n automation workflows, and full stack Next.js development. I use AI-assisted development to deliver faster and more affordably the same way every modern developer works in 2026. I do not just write code. I solve problems that matter to real businesses.",
+    "title": "Building AI Tools Businesses Actually Need | Automation, RAG & Full-Stack | I Build It, Deploy It & Make Sure It Works",
+    "bio": "Your team wastes hours searching through documents, manuals, and data for answers that should take seconds. I build AI systems that fix that. Custom chatbots and automation workflows that connect to your existing data, give instant answers, and run on autopilot. From idea to deployed product, I handle everything. Faster delivery. Lower cost. No quality compromises.",
+    "aboutMe": "20 years. Three continents. One rule, ship software that actually works. I've built payroll systems processing 1,000+ employee salaries, automation bots that have run without interruption for 15 years, and AI education platforms with live video, RAG search, and vector databases. My clients are in Pakistan, the USA, and Australia across textile, finance, education, and e-commerce. I started in 2005 building database systems for Faisalabad's textile industry. Since then I've survived every major shift in this industry, desktop to web, manual to automated, traditional dev to AI and delivered working software through all of it. Today I specialize in AI integration, RAG applications, n8n automation workflows, and full-stack Next.js development. I don't just write code. I solve problems that matter to real businesses.",
     "recommendationImage": "https://github.com/tanweer306/portfolio-assets/blob/main/James.png?raw=true",
     "profileImage": "https://github.com/tanweer306/portfolio-assets/blob/main/Tanveer%20Ahmad.png?raw=true",
     "resumeUrl": "https://example.com/resume.pdf",
@@ -18,35 +18,40 @@
     "languages": [
       "JavaScript/TypeScript",
       "Python",
-      "SQL"
+      "SQL",
+       "VB6",
+       ".NET",
+      "HTML/CSS"
     ],
     "AI & Automation": [
       "n8n Workflow Automation",
-      "RAG (Retrieval Augmented Generation)",
+      "RAG",
       "OpenAI / Claude API",
       "Vector Search (Qdrant)",
-      "LangChain"
+      "AI Agents"
     ],
     "Frameworks & Tools": [
       "Next.js",
       "React",
       "Node.js",
       "FastAPI",
-      "Docker"
+      "Tailwind CSS"
     ],
     "Cloud & Databases": [
       "AWS (EC2, S3)",
       "MongoDB",
       "PostgreSQL",
       "Supabase",
-      "Vercel / Render"
+      "Vercel / Render",
+      "Docker"
     ]
   },
+  "experienceTagline": "Local textile software (2003) → US clients (2007) → Early automation pioneer (2008) → Decade-long US partnerships → AI developer (2025)",
   "experience": [
     {
       "company": "Self Employed",
       "role": "Senior Full Stack Developer",
-      "duration": "Jan 2025 - Present",
+      "duration": "Jan 2023 - Present",
       "location": "Faisalabad, PK",
       "responsibilities": [
         "Built full stack AI-powered web applications using Next.js, Python and cloud infrastructure",
@@ -64,7 +69,7 @@
     {
       "company": "Social Media & YouTube Manager OPMC, Australia — 3 years",
       "role": "Social Media & YouTube Manager",
-      "duration": "Jan 2022 - Dec 2025",
+      "duration": "Jan 2022 - Dec 2024",
       "location": "Remote",
         "responsibilities": [
           "Managed complete social media presence across all platforms for an Australian WooCommerce plugin company",
@@ -83,7 +88,7 @@
     {
       "company": "NetworkAfterWork, USA",
       "role": "LinkedIn Automation Specialist Independent Consultant",
-      "duration": "Jun 2012 - Dec 2022",
+      "duration": "Jun 2012 - Dec 2021",
       "location": "Remote",
       "responsibilities": [
         "Developed and maintained proprietary automation bots for LinkedIn outreach campaigns",
@@ -100,7 +105,7 @@
     {
       "company": "Property Scoring Tools Developer Hemant Jindal, USA — 2 years",
       "role": "Software Developer",
-      "duration": "Jan 2010 - Dec 2012",
+      "duration": "Mar 2010 - Dec 2012",
       "location": "Remote",
       "responsibilities": [
         "Developed custom property scoring and analysis tools for a US-based real estate investor",
@@ -119,7 +124,7 @@
     },
   {   "company": "Affiliate Marketing Business Partner Ronald Curtis, USA — 3 years",
       "role": "Affiliate Marketing Automation Developer",
-      "duration": "May 2008 - Dec 2011",
+      "duration": "Dec 2008 - Oct 2011",
       "location": "Remote",
       "responsibilities": [
         "Built and operated custom automation bots for MySpace social platform at scale",
@@ -138,7 +143,7 @@
     },
     { "company": "COMSDEV Software Company, Faisalabad",
       "role": "Software Engineer",
-      "duration": "Jun 2007 - Dec 2008",
+      "duration": "May 2007 - Nov 2008",
       "location": "Faisalabad, PK",
       "responsibilities": [
         "Developed custom software solutions for US-based clients in various industries",
@@ -155,7 +160,7 @@
     {
       "company": "Rana Textile Mills, Faisalabad",
       "role": "Desktop Software Developer",
-      "duration": "Jan 2003 - May 2007",
+      "duration": "Jan 2003 - Apr 2007",
       "location": "Faisalabad, PK",
       "responsibilities": [
         "Developed database-driven desktop applications for textile industry in Faisalabad",
