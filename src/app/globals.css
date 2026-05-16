@@ -19,3 +19,31 @@ body {
     background: var(--background);
     font-family: Arial, Helvetica, sans-serif;
 }
+
+/* RTL Support for Chat Widget */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] input,
+[dir="rtl"] textarea {
+    text-align: right;
+    direction: rtl;
+}
+
+[dir="rtl"] [data-oid="message-input"] {
+    text-align: right;
+}
+
+/* Ensure proper word breaking in RTL languages */
+[dir="rtl"] p,
+[dir="rtl"] span {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Fix message bubble alignment in RTL */
+[dir="rtl"] [data-oid="message-item"] {
+    flex-direction: row-reverse;
+}
