@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 import { fallbackData } from "./portfolioData";
 import { useTheme } from "./ThemeProvider";
 import { Mic, Paperclip, MessageCircle, Minimize2, Bot, User, Send, X, Globe, Play, Pause, Volume2, Download } from "lucide-react";
@@ -298,12 +299,24 @@ export default function Page() {
 
   // Chat widget states
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
       id: 1,
       type: "bot",
-      message:
-        "Hi! I'm here to help you learn more about my work. How can I assist you today?",
+      message: `**Hi! I'm Tanveer's AI Assistant.**
+
+I can help you explore his work, services, and pricing in any language!
+
+**Here's what I can do:**
+
+- Switch language using the globe button below.
+- Tap the mic to send an audio message.
+- Share your requirements as a PDF,Excel or text file
+- Ask me about pricing, timelines, or tech stack
+- Click **"Discuss a Project"** button below to leave your details
+
+
+**What would you like to know?**`,
       timestamp: new Date()
     }
   ]);
@@ -317,6 +330,14 @@ export default function Page() {
   const [showLanguagePopup, setShowLanguagePopup] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+  const [showMicGuide, setShowMicGuide] = useState(false);
+  const [micError, setMicError] = useState<{
+    title: string;
+    message: string;
+    steps: string[];
+    type: string;
+  } | null>(null);
+  const [showChatbotFeatures, setShowChatbotFeatures] = useState(false);
 
   // 50 Most common languages
   const languages = [
@@ -379,6 +400,14 @@ export default function Page() {
   const [recordingBlob, setRecordingBlob] = useState<Blob | null>(null);
   const [chatInput, setChatInput] = useState("");
   const [chatSize, setChatSize] = useState({ width: 320, height: 500 });
+
+  // Lead generation states
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const [leadName, setLeadName] = useState("");
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadDescription, setLeadDescription] = useState("");
+  const [isSubmittingLead, setIsSubmittingLead] = useState(false);
+  const [leadSubmitted, setLeadSubmitted] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef({
     startX: 0,
@@ -390,6 +419,12 @@ export default function Page() {
     Math.random().toString(36).substring(2, 15) +
     Math.random().toString(36).substring(2, 15)
   );
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -671,36 +706,36 @@ export default function Page() {
 
   const startRecording = async () => {
     try {
-      console.log('Requesting microphone access...');
-      
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: true
-      });
-      
-      console.log('✓ Microphone access granted');
-      console.log('Stream audio tracks:', stream.getAudioTracks().length);
-      
-      const audioTrack = stream.getAudioTracks()[0];
-      if (audioTrack) {
-        const settings = audioTrack.getSettings?.();
-        
-        // 🔴 CHECK IF MICROPHONE IS MUTED!
-        if (audioTrack.muted) {
-          console.error('❌ MICROPHONE IS MUTED!');
-          console.error('Your microphone is muted by the system or browser.');
-          alert('Your microphone is MUTED! Please unmute it in your system settings or browser settings and try again.');
-          stream.getTracks().forEach(track => track.stop());
-          return;
-        }
-        
-        console.log('Audio track state:', {
-          enabled: audioTrack.enabled,
-          muted: audioTrack.muted,
-          readyState: audioTrack.readyState,
-          settings
-        });
+      // First check if browser supports getUserMedia
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Your browser does not support voice messages. Please use Chrome, Edge, or Firefox.");
+        return;
       }
+
+      // Check permission status before requesting (where supported)
+      if (navigator.permissions) {
+        try {
+          const permStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+          
+          if (permStatus.state === 'denied') {
+            showMicPermissionGuide();
+            return;
+          }
+        } catch (e) {
+          // permissions API not supported, continue anyway
+        }
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       
+      // Check if microphone track is muted
+      const audioTrack = stream.getAudioTracks()[0];
+      if (audioTrack?.muted) {
+        stream.getTracks().forEach(track => track.stop());
+        showMicPermissionGuide();
+        return;
+      }
+
       const mimeTypes = [
         'audio/webm;codecs=opus',
         'audio/webm',
@@ -712,7 +747,6 @@ export default function Page() {
       for (const mimeType of mimeTypes) {
         if (MediaRecorder.isTypeSupported(mimeType)) {
           selectedMimeType = mimeType;
-          console.log('✓ Using MIME type:', mimeType);
           break;
         }
       }
@@ -723,102 +757,57 @@ export default function Page() {
       );
       
       const audioChunks: BlobPart[] = [];
-      let chunkCount = 0;
-      let totalChunkSize = 0;
       let recordingTimerId: NodeJS.Timeout;
       let dataRequestTimerId: NodeJS.Timeout;
 
       recorder.ondataavailable = (event) => {
-        const chunkSize = event.data.size;
-        
-        if (chunkSize > 0) {
-          chunkCount++;
-          totalChunkSize += chunkSize;
-          console.log(`📦 Chunk ${chunkCount}: ${chunkSize} bytes (Total: ${totalChunkSize} bytes)`);
-          audioChunks.push(event.data);
-        }
-      };
-
-      recorder.onstart = () => {
-        console.log('🎙️ Recording started - requesting data every 500ms');
+        if (event.data.size > 0) audioChunks.push(event.data);
       };
 
       recorder.onstop = () => {
         clearInterval(recordingTimerId);
         clearInterval(dataRequestTimerId);
-        
-        // Request any remaining data ONLY if recorder is still in recording state
-        if (recorder.state === 'recording') {
-          recorder.requestData();
-        }
-        
-        const audioBlob = new Blob(audioChunks, { 
-          type: selectedMimeType || 'audio/webm' 
-        });
-        
-        console.log('\n=== 📊 RECORDING SUMMARY ===');
-        console.log('Status: Recording stopped');
-        console.log('Total chunks collected:', chunkCount);
-        console.log('Total raw data size:', totalChunkSize, 'bytes');
-        console.log('Final blob size:', audioBlob.size, 'bytes');
-        console.log('Recording duration:', recordingTime, 'seconds');
-        console.log('MIME type:', selectedMimeType || 'browser default');
-        
-        if (audioBlob.size < 5000) {
-          console.error('❌ ERROR: Blob is too small!');
-          console.error('Check: 1) Microphone muted? 2) Microphone working? 3) Correct device selected?');
-        } else {
-          console.log('✓ Audio captured successfully!');
-        }
-        console.log('============================\n');
-        
+        const audioBlob = new Blob(audioChunks, { type: selectedMimeType || 'audio/webm' });
         setRecordingBlob(audioBlob);
-        
-        // Stop and release the microphone
-        stream.getTracks().forEach(track => {
-          track.stop();
-        });
+        stream.getTracks().forEach(track => track.stop());
       };
 
-      recorder.onerror = (event) => {
-        console.error('MediaRecorder error:', event.error);
-      };
-
-      // Start recording without timeslice
       recorder.start();
-      
       setMediaRecorder(recorder);
       setIsRecording(true);
       setShowAudioRecordModal(true);
       setRecordingTime(0);
 
-      // Actively request data every 500ms to force ondataavailable events
       dataRequestTimerId = setInterval(() => {
-        if (recorder.state === 'recording') {
-          recorder.requestData();
-        }
+        if (recorder.state === 'recording') recorder.requestData();
       }, 500);
 
-      // Update recording timer every second
       recordingTimerId = setInterval(() => {
-        setRecordingTime((prev) => prev + 1);
+        setRecordingTime(prev => prev + 1);
       }, 1000);
-      
+
     } catch (error) {
-      console.error("❌ Microphone access error:", error);
-      
-      let errorMessage = "Unable to access microphone.";
       if (error instanceof DOMException) {
         if (error.name === 'NotAllowedError') {
-          errorMessage = "Microphone permission denied. Please allow access.";
+          showMicPermissionGuide();
         } else if (error.name === 'NotFoundError') {
-          errorMessage = "No microphone found. Connect a microphone and try again.";
-        } else if (error.name === 'NotReadableError') {
-          errorMessage = "Microphone is in use. Close other apps and try again.";
+          setMicError({
+            title: "No Microphone Found",
+            message: "Connect a microphone or headset and try again.",
+            steps: [],
+            type: "notfound"
+          });
+          setShowMicGuide(true);
+        } else {
+          setMicError({
+            title: "Microphone Busy",
+            message: "Your microphone is being used by another app. Close other apps and try again.",
+            steps: [],
+            type: "busy"
+          });
+          setShowMicGuide(true);
         }
       }
-      
-      alert(errorMessage);
     }
   };
 
@@ -828,6 +817,71 @@ export default function Page() {
       setIsRecording(false);
       setShowAudioRecordModal(true);
     }
+  };
+
+  const showMicPermissionGuide = () => {
+    const isChrome = navigator.userAgent.includes('Chrome');
+    const isEdge = navigator.userAgent.includes('Edg');
+    const isFirefox = navigator.userAgent.includes('Firefox');
+    const isSafari = navigator.userAgent.includes('Safari') && !isChrome;
+    const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad/i.test(navigator.userAgent);
+
+    let steps: string[] = [];
+
+    if (isMobile && isAndroid) {
+      steps = [
+        "Open phone Settings",
+        "Tap Apps or Application Manager",
+        `Find your browser (${isChrome ? 'Chrome' : 'your browser'})`,
+        "Tap Permissions",
+        "Enable Microphone",
+        "Come back and try again"
+      ];
+    } else if (isMobile && isIOS) {
+      steps = [
+        "Open iPhone Settings",
+        `Scroll down and tap ${isChrome ? 'Chrome' : isEdge ? 'Edge' : 'Safari'}`,
+        "Enable Microphone toggle",
+        "Come back and try again"
+      ];
+    } else if (isChrome || isEdge) {
+      steps = [
+        `Click the lock icon 🔒 in the address bar`,
+        "Click Site Settings",
+        "Find Microphone and set to Allow",
+        "Refresh the page and try again"
+      ];
+    } else if (isFirefox) {
+      steps = [
+        "Click the lock icon in the address bar",
+        "Click Connection Secure > More Information",
+        "Go to Permissions tab",
+        "Find Microphone and select Allow",
+        "Refresh the page and try again"
+      ];
+    } else if (isSafari) {
+      steps = [
+        "Click Safari menu > Settings for This Website",
+        "Find Microphone and select Allow",
+        "Try again"
+      ];
+    } else {
+      steps = [
+        "Click the lock or info icon in your browser address bar",
+        "Find Microphone permission and set to Allow",
+        "Refresh the page and try again"
+      ];
+    }
+
+    setMicError({
+      title: "Microphone Access Needed",
+      message: "Please allow microphone access to send voice messages.",
+      steps,
+      type: "denied"
+    });
+    setShowMicGuide(true);
   };
 
   const handleSendAudioMessage = async () => {
@@ -1040,6 +1094,26 @@ export default function Page() {
 
     setChatMessages((prev) => [...prev, userMessage]);
 
+    // Add loading message like text messages
+    const loadingMessageId = Date.now() + 1;
+    const loadingMessage: ChatMessage = {
+      id: loadingMessageId,
+      type: "bot",
+      message: "Processing your file(s)...",
+      timestamp: new Date(),
+      isLoading: true
+    };
+    setChatMessages((prev) => [...prev, loadingMessage]);
+    setIsWaitingForResponse(true);
+
+    // Close modal immediately
+    setSelectedFiles([]);
+    setFileMessage("");
+    setShowFileUploadModal(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
     try {
       const formData = new FormData();
       selectedFiles.forEach((file) => {
@@ -1070,31 +1144,42 @@ export default function Page() {
         if (response.ok) {
           const data = await response.json();
           const botMessage = {
-            id: Date.now() + 1,
+            id: loadingMessageId,
             type: "bot" as const,
             message: data.response || data.message || "Thanks for uploading the files!",
-            timestamp: new Date()
+            timestamp: new Date(),
+            isLoading: false
           };
-          setChatMessages((prev) => [...prev, botMessage]);
+          setChatMessages((prev) =>
+            prev.map((msg) => (msg.id === loadingMessageId ? botMessage : msg))
+          );
         }
       } else {
         const botMessage = {
-          id: Date.now() + 1,
+          id: loadingMessageId,
           type: "bot" as const,
           message: `Thanks for sharing the file(s)! I'll review them.`,
-          timestamp: new Date()
+          timestamp: new Date(),
+          isLoading: false
         };
-        setChatMessages((prev) => [...prev, botMessage]);
+        setChatMessages((prev) =>
+          prev.map((msg) => (msg.id === loadingMessageId ? botMessage : msg))
+        );
       }
     } catch (error) {
       console.error("Error sending files:", error);
-    }
-
-    setSelectedFiles([]);
-    setFileMessage("");
-    setShowFileUploadModal(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      const errorMessage: ChatMessage = {
+        id: loadingMessageId,
+        type: "bot",
+        message: "I received your file(s) but encountered an issue. Please try again.",
+        timestamp: new Date(),
+        isLoading: false
+      };
+      setChatMessages((prev) =>
+        prev.map((msg) => (msg.id === loadingMessageId ? errorMessage : msg))
+      );
+    } finally {
+      setIsWaitingForResponse(false);
     }
   };
 
@@ -1113,6 +1198,57 @@ export default function Page() {
     setSelectedFiles([]);
     setSelectedFile(null);
     setFileMessage("");
+  };
+
+  const handleLeadSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!leadName.trim() || !leadEmail.trim()) return;
+
+    setIsSubmittingLead(true);
+
+    try {
+      const webhookUrl = process.env.NEXT_PUBLIC_CHATBOT_WEBHOOK_URL;
+
+      if (webhookUrl && webhookUrl !== "https://your-webhook-url-here.com/api/chat") {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "lead_capture",
+            message: leadDescription || "Wants to discuss a project",
+            leadName: leadName.trim(),
+            leadEmail: leadEmail.trim(),
+            leadDescription: leadDescription.trim(),
+            sessionId: sessionId.current,
+            timestamp: new Date().toISOString(),
+            language: selectedLanguage
+          })
+        });
+      }
+
+      // Add confirmation message to chat
+      const confirmMessage: ChatMessage = {
+        id: Date.now(),
+        type: "bot",
+        message: `Thank you ${leadName}! I have received your details and will contact you at ${leadEmail} shortly. Looking forward to discussing your project!`,
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, confirmMessage]);
+
+      setLeadSubmitted(true);
+      setTimeout(() => {
+        setShowLeadForm(false);
+        setLeadSubmitted(false);
+        setLeadName("");
+        setLeadEmail("");
+        setLeadDescription("");
+      }, 2000);
+
+    } catch (error) {
+      console.error("Lead submission error:", error);
+    } finally {
+      setIsSubmittingLead(false);
+    }
   };
 
   const handleResizeStart = (e: React.MouseEvent, direction: string) => {
@@ -2203,7 +2339,7 @@ export default function Page() {
                       </div>
                     )}
                     <div
-                      className={`max-w-xs ${
+                      className={`max-w-xs rounded-xl ${
                         message.type === "user"
                           ? "bg-blue-600 text-white"
                           : "bg-gray-100 text-gray-800"
@@ -2233,9 +2369,25 @@ export default function Page() {
                             <span className="text-sm text-gray-500">Waiting for response...</span>
                           </div>
                         ) : (
-                          <p className={`text-sm ${isRTLLanguage(selectedLanguage) ? 'text-right' : 'text-left'} break-words`} data-oid="message-text">
-                            {message.message}
-                          </p>
+                          <div className={`text-sm ${isRTLLanguage(selectedLanguage) ? 'text-right' : 'text-left'} break-words select-all prose prose-sm max-w-none`} data-oid="message-text">
+                            <ReactMarkdown
+                              components={{
+                                h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-2 mt-2" {...props} />,
+                                h2: ({node, ...props}) => <h2 className="text-base font-bold mb-1 mt-2" {...props} />,
+                                h3: ({node, ...props}) => <h3 className="text-sm font-bold mb-1 mt-1" {...props} />,
+                                strong: ({node, ...props}) => <strong className="font-bold" {...props} />,
+                                em: ({node, ...props}) => <em className="italic" {...props} />,
+                                ul: ({node, ...props}) => <ul className="list-disc list-inside ml-2 my-1" {...props} />,
+                                ol: ({node, ...props}) => <ol className="list-decimal list-inside ml-2 my-1" {...props} />,
+                                li: ({node, ...props}) => <li className="my-0" {...props} />,
+                                code: ({node, inline, ...props}) => inline ? <code className="bg-gray-200 px-1 rounded text-xs" {...props} /> : <pre className="bg-gray-200 p-2 rounded overflow-x-auto text-xs my-1" {...props} />,
+                                p: ({node, ...props}) => <p className="my-1" {...props} />,
+                                a: ({node, ...props}) => <a className="text-blue-600 underline hover:text-blue-800" {...props} />,
+                              }}
+                            >
+                              {message.message}
+                            </ReactMarkdown>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -2246,6 +2398,7 @@ export default function Page() {
                     )}
                   </motion.div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
 
               {/* Chat Input */}
@@ -2388,7 +2541,26 @@ export default function Page() {
                   >
                     Contact
                   </button>
+                  <button
+                    onClick={() => setShowChatbotFeatures(true)}
+                    className="text-xs bg-white border border-gray-200 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-700"
+                    data-oid="action-chatbot-features"
+                  >
+                    Chatbot Features
+                  </button>
                 </div>
+              </div>
+
+              {/* Lead Generation Button */}
+              <div className="px-4 pb-3" data-oid="lead-section">
+                <button
+                  onClick={() => setShowLeadForm(true)}
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-all transform hover:scale-[1.02] shadow-md"
+                  data-oid="lead-btn"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Discuss a Project with Tanveer
+                </button>
               </div>
 
               {/* Resize Handles */}
@@ -2710,6 +2882,289 @@ export default function Page() {
                   </>
                 )}
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Microphone Permission Guide Modal */}
+      <AnimatePresence>
+        {showMicGuide && micError && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowMicGuide(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Icon */}
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Mic className="w-8 h-8 text-red-500" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900">{micError.title}</h3>
+                <p className="text-gray-500 text-sm mt-1">{micError.message}</p>
+              </div>
+
+              {/* Steps */}
+              {micError.steps.length > 0 && (
+                <div className="bg-gray-50 rounded-xl p-4 mb-4">
+                  <p className="text-xs font-semibold text-gray-600 uppercase mb-3">
+                    How to fix:
+                  </p>
+                  <ol className="space-y-2">
+                    {micError.steps.map((step, index) => (
+                      <li key={index} className="flex gap-3 text-sm text-gray-700">
+                        <span className="flex-shrink-0 w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                          {index + 1}
+                        </span>
+                        {step}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {/* Alternative */}
+              <div className="bg-blue-50 rounded-xl p-3 mb-4 text-center">
+                <p className="text-xs text-blue-700 font-medium">
+                  💬 You can also type your message or send a file instead
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowMicGuide(false)}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium text-sm transition-colors"
+                >
+                  Close
+                </button>
+                {micError.type === 'denied' && (
+                  <button
+                    onClick={() => {
+                      setShowMicGuide(false);
+                      // Try requesting permission again
+                      setTimeout(() => startRecording(), 500);
+                    }}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors"
+                  >
+                    Try Again
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Chatbot Features Modal */}
+      <AnimatePresence>
+        {showChatbotFeatures && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowChatbotFeatures(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold text-gray-900">Built by Tanveer Ahmad</h2>
+                  <button
+                    onClick={() => setShowChatbotFeatures(false)}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+                <p className="text-gray-600">Production-grade multimodal AI assistant — powering this portfolio.</p>
+              </div>
+
+              {/* Features Section */}
+              <div className="mb-8">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="text-xl">✨</span> Features
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {[
+                    { icon: "🌍", title: "50+ Languages", desc: "chat in any language instantly" },
+                    { icon: "🎙️", title: "Voice I/O", desc: "send audio, receive spoken replies" },
+                    { icon: "📄", title: "File Processing", desc: "PDF, Word, Excel, TXT analysis" },
+                    { icon: "🔍", title: "RAG Memory", desc: "live vector search via Pinecone" },
+                    { icon: "💾", title: "Chat Memory", desc: "full conversation history via PostgreSQL" },
+                    { icon: "⚙️", title: "n8n Workflows", desc: "self-hosted automation on AWS EC2" },
+                    { icon: "✉️", title: "Gmail Alerts", desc: "instant email on every lead capture" },
+                    { icon: "📋", title: "Lead Capture", desc: "collects name, email & project details" },
+                    { icon: "📝", title: "Markdown UI", desc: "clean formatted readable responses" },
+                    { icon: "↔️", title: "Resizable Widget", desc: "drag to resize on any screen" },
+                    { icon: "🌓", title: "Dark / Light Mode", desc: "follows system preference" },
+                    { icon: "🔒", title: "Self-Hosted", desc: "full data ownership, no vendor lock-in" }
+                  ].map((feature, idx) => (
+                    <div key={idx} className="bg-gray-50 rounded-lg p-3 border border-gray-200 hover:border-blue-300 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl flex-shrink-0">{feature.icon}</span>
+                        <div>
+                          <p className="font-semibold text-gray-900 text-sm">{feature.title}</p>
+                          <p className="text-xs text-gray-600 mt-0.5"> {feature.desc}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tech Stack Section */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">🛠️ Tech Stack</h3>
+                <div className="flex flex-wrap gap-2">
+                  {["Next.js", "n8n", "GPT-4o", "Whisper", "OpenAI TTS", "Pinecone", "Neon PostgreSQL", "AWS EC2", "Nginx"].map((tech, idx) => (
+                    <span key={idx} className="bg-white border border-blue-200 text-blue-800 text-xs font-medium px-3 py-1.5 rounded-full shadow-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Close Button */}
+              <div className="mt-6 flex gap-3">
+                <button
+                  onClick={() => setShowChatbotFeatures(false)}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Lead Capture Modal */}
+      <AnimatePresence>
+        {showLeadForm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowLeadForm(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {leadSubmitted ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Message Sent!</h3>
+                  <p className="text-gray-600">Tanveer will contact you soon.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <MessageCircle className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-1">
+                      Discuss a Project
+                    </h3>
+                    <p className="text-gray-500 text-sm">
+                      Leave your details and Tanveer will reach out to you directly.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleLeadSubmit} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Your Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={leadName}
+                        onChange={(e) => setLeadName(e.target.value)}
+                        placeholder="John Smith"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-900"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        value={leadEmail}
+                        onChange={(e) => setLeadEmail(e.target.value)}
+                        placeholder="john@example.com"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-900"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Project Description
+                      </label>
+                      <textarea
+                        value={leadDescription}
+                        onChange={(e) => setLeadDescription(e.target.value)}
+                        placeholder="Briefly describe what you need..."
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-900 resize-none"
+                      />
+                    </div>
+
+                    <div className="flex gap-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowLeadForm(false)}
+                        className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isSubmittingLead || !leadName.trim() || !leadEmail.trim()}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                      >
+                        {isSubmittingLead ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Send className="w-4 h-4" />
+                        )}
+                        {isSubmittingLead ? "Sending..." : "Send Message"}
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
             </motion.div>
           </motion.div>
         )}

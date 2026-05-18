@@ -47,3 +47,54 @@ body {
 [dir="rtl"] [data-oid="message-item"] {
     flex-direction: row-reverse;
 }
+
+/* Markdown Content Styling */
+[data-oid="message-text"] {
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+    cursor: text;
+}
+
+/* Ensure markdown elements are selectable and inherit text color */
+[data-oid="message-text"] h1,
+[data-oid="message-text"] h2,
+[data-oid="message-text"] h3,
+[data-oid="message-text"] h4,
+[data-oid="message-text"] h5,
+[data-oid="message-text"] h6,
+[data-oid="message-text"] p,
+[data-oid="message-text"] li,
+[data-oid="message-text"] strong,
+[data-oid="message-text"] em,
+[data-oid="message-text"] code,
+[data-oid="message-text"] a {
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+}
+
+/* Style code blocks for better readability */
+[data-oid="message-text"] code {
+    user-select: all;
+}
+
+[data-oid="message-text"] pre {
+    user-select: all;
+    overflow-x: auto;
+}
+
+/* Inherit text color from message bubble for all markdown elements */
+[data-oid="message-bubble"] [data-oid="message-text"] h1,
+[data-oid="message-bubble"] [data-oid="message-text"] h2,
+[data-oid="message-bubble"] [data-oid="message-text"] h3,
+[data-oid="message-bubble"] [data-oid="message-text"] p,
+[data-oid="message-bubble"] [data-oid="message-text"] ul,
+[data-oid="message-bubble"] [data-oid="message-text"] ol,
+[data-oid="message-bubble"] [data-oid="message-text"] li,
+[data-oid="message-bubble"] [data-oid="message-text"] strong,
+[data-oid="message-bubble"] [data-oid="message-text"] em {
+    color: inherit;
+}
