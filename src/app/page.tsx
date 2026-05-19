@@ -706,35 +706,21 @@ I can help you explore his work, services, and pricing in any language!
 
   const startRecording = async () => {
     try {
-      // First check if browser supports getUserMedia
+      // Check if browser supports getUserMedia
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("Your browser does not support voice messages. Please use Chrome, Edge, or Firefox.");
+        setMicError({
+          title: "Browser Not Supported",
+          message: "Your browser doesn't support voice messages. Please use Chrome, Safari, Edge, or Firefox.",
+          steps: [],
+          type: "unsupported"
+        });
+        setShowMicGuide(true);
         return;
       }
 
-      // Check permission status before requesting (where supported)
-      if (navigator.permissions) {
-        try {
-          const permStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-          
-          if (permStatus.state === 'denied') {
-            showMicPermissionGuide();
-            return;
-          }
-        } catch (e) {
-          // permissions API not supported, continue anyway
-        }
-      }
-
+      // Request microphone access — this triggers the browser's native Allow/Block prompt automatically.
+      // No custom popup needed: the browser handles permission on all platforms (desktop, Android, iOS).
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
-      // Check if microphone track is muted
-      const audioTrack = stream.getAudioTracks()[0];
-      if (audioTrack?.muted) {
-        stream.getTracks().forEach(track => track.stop());
-        showMicPermissionGuide();
-        return;
-      }
 
       const mimeTypes = [
         'audio/webm;codecs=opus',
@@ -789,19 +775,27 @@ I can help you explore his work, services, and pricing in any language!
     } catch (error) {
       if (error instanceof DOMException) {
         if (error.name === 'NotAllowedError') {
-          showMicPermissionGuide();
+          // User clicked "Block" on the browser's native permission prompt.
+          // Show a minimal message — no complex steps needed.
+          setMicError({
+            title: "🎙️ Microphone Access Blocked",
+            message: "You tapped 'Block' when the browser asked for microphone access. To enable it, tap the lock/camera icon in your browser's address bar and allow microphone, then try again.",
+            steps: [],
+            type: "denied"
+          });
+          setShowMicGuide(true);
         } else if (error.name === 'NotFoundError') {
           setMicError({
-            title: "No Microphone Found",
-            message: "Connect a microphone or headset and try again.",
+            title: "🎤 No Microphone Found",
+            message: "No microphone was detected. Please connect a microphone or headset and try again.",
             steps: [],
             type: "notfound"
           });
           setShowMicGuide(true);
         } else {
           setMicError({
-            title: "Microphone Busy",
-            message: "Your microphone is being used by another app. Close other apps and try again.",
+            title: "🎙️ Microphone Busy",
+            message: "Your microphone is being used by another app. Close other apps or browser tabs using the mic and try again.",
             steps: [],
             type: "busy"
           });
@@ -819,70 +813,7 @@ I can help you explore his work, services, and pricing in any language!
     }
   };
 
-  const showMicPermissionGuide = () => {
-    const isChrome = navigator.userAgent.includes('Chrome');
-    const isEdge = navigator.userAgent.includes('Edg');
-    const isFirefox = navigator.userAgent.includes('Firefox');
-    const isSafari = navigator.userAgent.includes('Safari') && !isChrome;
-    const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const isIOS = /iPhone|iPad/i.test(navigator.userAgent);
 
-    let steps: string[] = [];
-
-    if (isMobile && isAndroid) {
-      steps = [
-        "Open phone Settings",
-        "Tap Apps or Application Manager",
-        `Find your browser (${isChrome ? 'Chrome' : 'your browser'})`,
-        "Tap Permissions",
-        "Enable Microphone",
-        "Come back and try again"
-      ];
-    } else if (isMobile && isIOS) {
-      steps = [
-        "Open iPhone Settings",
-        `Scroll down and tap ${isChrome ? 'Chrome' : isEdge ? 'Edge' : 'Safari'}`,
-        "Enable Microphone toggle",
-        "Come back and try again"
-      ];
-    } else if (isChrome || isEdge) {
-      steps = [
-        `Click the lock icon 🔒 in the address bar`,
-        "Click Site Settings",
-        "Find Microphone and set to Allow",
-        "Refresh the page and try again"
-      ];
-    } else if (isFirefox) {
-      steps = [
-        "Click the lock icon in the address bar",
-        "Click Connection Secure > More Information",
-        "Go to Permissions tab",
-        "Find Microphone and select Allow",
-        "Refresh the page and try again"
-      ];
-    } else if (isSafari) {
-      steps = [
-        "Click Safari menu > Settings for This Website",
-        "Find Microphone and select Allow",
-        "Try again"
-      ];
-    } else {
-      steps = [
-        "Click the lock or info icon in your browser address bar",
-        "Find Microphone permission and set to Allow",
-        "Refresh the page and try again"
-      ];
-    }
-
-    setMicError({
-      title: "Microphone Access Needed",
-      message: "Please allow microphone access to send voice messages.",
-      steps,
-      type: "denied"
-    });
-    setShowMicGuide(true);
-  };
 
   const handleSendAudioMessage = async () => {
     if (!recordingBlob) {
@@ -2372,17 +2303,17 @@ I can help you explore his work, services, and pricing in any language!
                           <div className={`text-sm ${isRTLLanguage(selectedLanguage) ? 'text-right' : 'text-left'} break-words select-all prose prose-sm max-w-none`} data-oid="message-text">
                             <ReactMarkdown
                               components={{
-                                h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-2 mt-2" {...props} />,
-                                h2: ({node, ...props}) => <h2 className="text-base font-bold mb-1 mt-2" {...props} />,
-                                h3: ({node, ...props}) => <h3 className="text-sm font-bold mb-1 mt-1" {...props} />,
-                                strong: ({node, ...props}) => <strong className="font-bold" {...props} />,
-                                em: ({node, ...props}) => <em className="italic" {...props} />,
-                                ul: ({node, ...props}) => <ul className="list-disc list-inside ml-2 my-1" {...props} />,
-                                ol: ({node, ...props}) => <ol className="list-decimal list-inside ml-2 my-1" {...props} />,
-                                li: ({node, ...props}) => <li className="my-0" {...props} />,
-                                code: ({node, inline, ...props}) => inline ? <code className="bg-gray-200 px-1 rounded text-xs" {...props} /> : <pre className="bg-gray-200 p-2 rounded overflow-x-auto text-xs my-1" {...props} />,
-                                p: ({node, ...props}) => <p className="my-1" {...props} />,
-                                a: ({node, ...props}) => <a className="text-blue-600 underline hover:text-blue-800" {...props} />,
+                                h1: ({node, ...props}: any) => <h1 className="text-lg font-bold mb-2 mt-2" {...props} />,
+                                h2: ({node, ...props}: any) => <h2 className="text-base font-bold mb-1 mt-2" {...props} />,
+                                h3: ({node, ...props}: any) => <h3 className="text-sm font-bold mb-1 mt-1" {...props} />,
+                                strong: ({node, ...props}: any) => <strong className="font-bold" {...props} />,
+                                em: ({node, ...props}: any) => <em className="italic" {...props} />,
+                                ul: ({node, ...props}: any) => <ul className="list-disc list-inside ml-2 my-1" {...props} />,
+                                ol: ({node, ...props}: any) => <ol className="list-decimal list-inside ml-2 my-1" {...props} />,
+                                li: ({node, ...props}: any) => <li className="my-0" {...props} />,
+                                code: ({node, inline, ...props}: any) => inline ? <code className="bg-gray-200 px-1 rounded text-xs" {...props} /> : <pre className="bg-gray-200 p-2 rounded overflow-x-auto text-xs my-1" {...props} />,
+                                p: ({node, ...props}: any) => <p className="my-1" {...props} />,
+                                a: ({node, ...props}: any) => <a className="text-blue-600 underline hover:text-blue-800" {...props} />,
                               }}
                             >
                               {message.message}
@@ -2540,6 +2471,13 @@ I can help you explore his work, services, and pricing in any language!
                     data-oid="action-contact"
                   >
                     Contact
+                  </button>
+                  <button
+                    onClick={() => sendChatMessage("What are your pricing and rates for projects?")}
+                    className="text-xs bg-white border border-gray-200 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-700"
+                    data-oid="action-pricing"
+                  >
+                    Pricing
                   </button>
                   <button
                     onClick={() => setShowChatbotFeatures(true)}
@@ -2887,7 +2825,7 @@ I can help you explore his work, services, and pricing in any language!
         )}
       </AnimatePresence>
 
-      {/* Microphone Permission Guide Modal */}
+      {/* Microphone Error Modal */}
       <AnimatePresence>
         {showMicGuide && micError && (
           <motion.div
@@ -2905,59 +2843,34 @@ I can help you explore his work, services, and pricing in any language!
               className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Icon */}
-              <div className="text-center mb-4">
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Mic className="w-8 h-8 text-red-500" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900">{micError.title}</h3>
-                <p className="text-gray-500 text-sm mt-1">{micError.message}</p>
+              <div className="text-center mb-5">
+                <div className="text-5xl mb-3">🎤</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{micError.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{micError.message}</p>
               </div>
 
-              {/* Steps */}
-              {micError.steps.length > 0 && (
-                <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                  <p className="text-xs font-semibold text-gray-600 uppercase mb-3">
-                    How to fix:
-                  </p>
-                  <ol className="space-y-2">
-                    {micError.steps.map((step, index) => (
-                      <li key={index} className="flex gap-3 text-sm text-gray-700">
-                        <span className="flex-shrink-0 w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                          {index + 1}
-                        </span>
-                        {step}
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              )}
-
-              {/* Alternative */}
-              <div className="bg-blue-50 rounded-xl p-3 mb-4 text-center">
-                <p className="text-xs text-blue-700 font-medium">
-                  💬 You can also type your message or send a file instead
+              <div className="bg-blue-50 rounded-xl p-3 mb-5 border border-blue-100">
+                <p className="text-sm text-blue-800 text-center">
+                  💡 You can also <strong>type messages</strong> or <strong>send files</strong> anytime!
                 </p>
               </div>
 
-              {/* Buttons */}
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowMicGuide(false)}
-                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium text-sm transition-colors"
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-3 rounded-xl font-semibold text-sm transition-colors"
                 >
                   Close
                 </button>
-                {micError.type === 'denied' && (
+                {(micError.type === 'denied' || micError.type === 'notfound' || micError.type === 'busy') && (
                   <button
                     onClick={() => {
                       setShowMicGuide(false);
-                      // Try requesting permission again
-                      setTimeout(() => startRecording(), 500);
+                      setTimeout(() => startRecording(), 300);
                     }}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors"
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-semibold text-sm transition-colors shadow-md"
                   >
-                    Try Again
+                    🎙️ Try Again
                   </button>
                 )}
               </div>
