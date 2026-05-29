@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { fallbackData } from "./portfolioData";
 import { useTheme } from "./ThemeProvider";
-import { Mic, Paperclip, MessageCircle, Minimize2, Bot, User, Send, X, Globe, Play, Pause, Volume2, Download } from "lucide-react";
+import { Mic, Paperclip, MessageCircle, Minimize2, UserRound, User, Send, X, Globe, Play, Pause, Volume2, Download } from "lucide-react";
 
 /**
  * Portfolio Data Structure
@@ -303,9 +303,9 @@ const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
       id: 1,
       type: "bot",
-      message: `**Hi! I'm Tanveer's AI Assistant.**
+      message: `**Hi! I'm Zara.**
 
-I can help you explore his work, services, and pricing in any language!
+I can help you explore Tanveer's work, services, and pricing in any language!
 
 **Here's what I can do:**
 
@@ -405,7 +405,9 @@ I can help you explore his work, services, and pricing in any language!
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [leadName, setLeadName] = useState("");
   const [leadEmail, setLeadEmail] = useState("");
-  const [leadDescription, setLeadDescription] = useState("");
+  const [leadDescription, setLeadDescription] = useState(
+  "Hi Tanveer, I’d like to discuss a project with you."
+);
   const [isSubmittingLead, setIsSubmittingLead] = useState(false);
   const [leadSubmitted, setLeadSubmitted] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -2230,11 +2232,11 @@ I can help you explore his work, services, and pricing in any language!
                 <div className="flex items-center justify-between" data-oid="header-content">
                   <div className="flex items-center gap-3" data-oid="header-info">
                     <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center" data-oid="header-icon">
-                      <Bot className="w-5 h-5" data-oid="bot-icon" />
+                      <UserRound className="w-5 h-5" data-oid="bot-icon" />
                     </div>
                     <div data-oid="header-text">
                       <h4 className="font-semibold" data-oid="bot-name">
-                        Portfolio Assistant
+                        Zara - (Tanveer's Assistant)
                       </h4>
                       <div className="flex items-center gap-1 text-xs text-blue-100" data-oid="bot-status">
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" data-oid="status-dot"></div>
@@ -2266,7 +2268,7 @@ I can help you explore his work, services, and pricing in any language!
                   >
                     {message.type === "bot" && (
                       <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0" data-oid="bot-avatar">
-                        <Bot className="w-4 h-4 text-blue-600" data-oid="bot-avatar-icon" />
+                        <UserRound className="w-4 h-4 text-blue-600" data-oid="bot-avatar-icon" />
                       </div>
                     )}
                     <div
@@ -2452,28 +2454,28 @@ I can help you explore his work, services, and pricing in any language!
                 </div>
                 <div className="flex gap-2 flex-wrap" data-oid="actions-buttons">
                   <button
-                    onClick={() => sendChatMessage("Tell me about your projects")}
+                    onClick={() => sendChatMessage("Tell me about Tanveer's projects")}
                     className="text-xs bg-white border border-gray-200 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-700"
                     data-oid="action-projects"
                   >
                     Projects
                   </button>
                   <button
-                    onClick={() => sendChatMessage("What are your skills?")}
+                    onClick={() => sendChatMessage("What are Tanveer's skills?")}
                     className="text-xs bg-white border border-gray-200 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-700"
                     data-oid="action-skills"
                   >
                     Skills
                   </button>
                   <button
-                    onClick={() => sendChatMessage("How can I contact you?")}
+                    onClick={() => sendChatMessage("How can I contact with Tanveer?")}
                     className="text-xs bg-white border border-gray-200 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-700"
                     data-oid="action-contact"
                   >
                     Contact
                   </button>
                   <button
-                    onClick={() => sendChatMessage("What are your pricing and rates for projects?")}
+                    onClick={() => sendChatMessage("What are Tanveer's pricing and rates for projects?")}
                     className="text-xs bg-white border border-gray-200 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-700"
                     data-oid="action-pricing"
                   >
@@ -3019,6 +3021,8 @@ I can help you explore his work, services, and pricing in any language!
                       </label>
                       <input
                         type="text"
+                        name="name"
+                        autoComplete="name"
                         value={leadName}
                         onChange={(e) => setLeadName(e.target.value)}
                         placeholder="John Smith"
