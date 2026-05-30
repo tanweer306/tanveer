@@ -2355,7 +2355,7 @@ I can help you explore Tanveer's work, services, and pricing in any language!
                     type="file"
                     multiple
                     onChange={handleFileSelect}
-                    accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.xls,.xlsx"
+                    accept=".pdf,.txt,.xlsx"
                     className="hidden"
                     data-oid="file-input"
                   />
